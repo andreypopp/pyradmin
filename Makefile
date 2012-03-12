@@ -1,5 +1,5 @@
 test develop install register clean build:
-		python setup.py $@
+	python setup.py $@
 
 bootstrap: develop
 	populate_pyradmin ./development.ini
