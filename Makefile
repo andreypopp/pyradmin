@@ -6,3 +6,6 @@ bootstrap: develop
 
 serve:
 	pserve ./development.ini
+
+shell:
+	pshell --reload --monitor-restart ./development.ini
