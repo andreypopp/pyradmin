@@ -4,9 +4,10 @@ var settings = {
 	pageSize: 20,
 
 	paths: {
+    root: '/',
 		stat: '/static',
 		api: '/',
-		models: '/',
+		models: '/api',
 		templates: '/static/main/templates'
 	}
 };

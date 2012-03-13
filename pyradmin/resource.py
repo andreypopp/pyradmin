@@ -1,6 +1,7 @@
 """ Resource configuration"""
 
 from pyradmin.util import class_name
+from pyradmin.interfaces import IConfig
 
 __all__ = ("Manager", "Collection", "Resource")
 
@@ -41,8 +42,12 @@ class Config(object):
     @property
     def schema(self):
         schema = self.Schema()
-        schema.name = class_name(cls=self.cls)
+        schema.name = self.name
         return schema
+
+    @property
+    def name(self):
+        return class_name(cls=self.cls)
 
     def serialize(self, item):
         return dict((n.name, getattr(item, n.name))
@@ -78,3 +83,15 @@ class Config(object):
 
     def delete_item(self, item):
         self.session.delete(item)
+
+class Root(object):
+
+    def __init__(self, request):
+        self.request = request
+
+    def __getitem__(self, name):
+        registry = self.request.registry
+        cfg = registry.queryUtility(IConfig, name=name)
+        if not cfg:
+            raise KeyError(name)
+        return cfg.collection

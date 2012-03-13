@@ -7,7 +7,7 @@ from sqlalchemy import Column, Integer, Text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-from pyradmin.resource import Config
+from pyradmin.resource import Config, Root
 from pyradmin.schema import ObjectSchema
 from pyradmin import views
 
@@ -44,7 +44,12 @@ def main(global_config, **settings):
     config = Configurator(
         settings=settings,
         root_factory=lambda request: MyModelConfig().collection)
-    config.add_static_view('static', 'static', cache_max_age=3600)
+
     config.include("pyradmin")
+    config.set_pyradmin_root("/api")
     config.add_pyradmin(MyModelConfig)
+
+    config.add_static_view('static', 'static', cache_max_age=3600)
+    config.add_route("main", pattern="/*subpath", view="pyradmin.views:main")
+
     return config.make_wsgi_app()

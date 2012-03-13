@@ -1,6 +1,6 @@
 """ Utilities"""
 
-__all__ = ("class_name",)
+__all__ = ("class_name", "DummyRendererFactory")
 
 def class_name(obj=None, cls=None):
     if obj is not None:

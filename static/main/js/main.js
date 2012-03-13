@@ -1,35 +1,31 @@
 $(function () {
 
-var settings = pyradmin.settings;
-var Range = pyradmin.Range;
-var xhr = pyradmin.xhr;
-var Model = pyradmin.model.Model;
-var render = pyradmin.templates.render;
+var Router = Backbone.Router.extend({
+  routes: {
+    ':model/':       'list',
+    ':model/:id/':   'show'
+  },
 
-var dataSlot = $('#data').first();
+  list: function(modelId) {
+    console.log('route "list":', modelId);
+    var view = new pyradmin.PaginatedListView({
+    	el: $('#main'),
+    	modelId: model
+		});
+    view.render();
+  },
 
-var showModel = function (modelPath) {
-	var url = settings.paths.models + modelPath;
-	var range = Range.fromQuery();
+  show: function(model, id) {
+    console.log('route "show":', model, id);
+  }
 
-	xhr.load(url, range, null, function (err, result) {
-		if (err)
-		{
-			console.log(err);
-			alert('ooops');
-		}
-		else
-		{
-			var model = Model.parse(result.meta.model);
+});
 
-			render(dataSlot, '/model.ejs', {
-				model: model,
-				data: result.data
-			});
-		}
-	});
-};
+$(document).ready(function() {
+  Backbone.history.start({pushState: true});
+});
 
-showModel('');
+window.pyradmin = window.pyradmin || {};
+window.pyradmin.router = new Router();
 
 });

@@ -1,12 +1,17 @@
 """ Views"""
 
 import json
+import pkg_resources
 
 from pyramid.response import Response
 
 from pyradmin.schema import serialize as serialize_schema
 
 __all__ = ("List", "Create", "Update", "Delete", "Show")
+
+def main(request):
+    page = pkg_resources.resource_stream("pyradmin", "static/index.html")
+    return Response(page.read())
 
 class View(object):
 
