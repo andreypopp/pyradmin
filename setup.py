@@ -37,7 +37,7 @@ setup(name='pyradmin',
       install_requires=requires,
       entry_points="""\
       [paste.app_factory]
-      main = pyradmin:main
+      main = pyradmin.app:main
       [console_scripts]
       populate_pyradmin = pyradmin.scripts.populate:main
       """,
