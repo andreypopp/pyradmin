@@ -14,12 +14,13 @@ Schema.prototype.getOrd = function (fieldName) {
 };
 
 Schema.prototype.fromInfo = function (info) {
-	info = info.fields;
+	this.name = info.name;
+	var fields = info.fields;
 
 	var i = 0;
-	for (var k in info)
+	for (var k in fields)
 	{
-		var fieldInfo = info[k];
+		var fieldInfo = fields[k];
 		var fieldName = fieldInfo.name;
 
 		this.ord[fieldName] = i++;

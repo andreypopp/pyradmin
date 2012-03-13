@@ -18,12 +18,10 @@ var showModel = function (modelPath) {
 		else
 		{
 			var schema = Schema.parse(result.meta.schema);
-			var rows = schema.getRows(result.data);
-			var fields = schema.getFields();
 
-			render(dataSlot, '/table.ejs', {
-				fields: fields,
-				rows: rows
+			render(dataSlot, '/model.ejs', {
+				model: schema,
+				data: result.data
 			});
 		}
 	});

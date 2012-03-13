@@ -1,5 +1,13 @@
+<div style="padding: 40px;">
+
 <h1><%= escape(model.name) %></h1>
 
+<br />
+
+<%
+var fields = model.getFields();
+var rows = model.getRows(data);
+%>
 <table class="table table-striped table-condensed">
 	<thead>
 		<% for (var i in fields) { %>
@@ -17,3 +25,7 @@
 		<% } %>
 	</tbody>
 </table>
+
+
+
+</div>
