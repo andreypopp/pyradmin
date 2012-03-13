@@ -83,8 +83,8 @@ class ResourceView(View):
         return self.resource.collection
 
     @property
-    def query(self);
-    return self.resource.collection.q
+    def query(self):
+        return self.resource.collection.q
 
     @property
     def item(self):
