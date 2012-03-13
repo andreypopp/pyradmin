@@ -43,7 +43,7 @@ class Collection(object):
         return self.session.query(self.cls)
 
     def serialize(self, item):
-        return {n.name: getattr(item, n.name) for n in self.schema.nodes}
+        return dict((n.name, getattr(item, n.name)) for n in self.schema.nodes)
 
     def __iter__(self):
         return iter(self.q())
