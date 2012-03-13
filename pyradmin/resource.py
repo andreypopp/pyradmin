@@ -59,10 +59,20 @@ class Config(object):
             if n.primary_key:
                 return n
 
+    def primary_key_for(self, item):
+        return getattr(item, self.primary_key.name)
+
     @property
     def collection(self):
         return self.Collection(self)
 
     def create_item(self, schema, data):
         schema.appstruct = self.cls()
-        return schema.deserialize(data)
+        item = schema.deserialize(data)
+        self.session.add(item)
+        return item
+
+    def update_item(self, item, schema, data):
+        schema.appstruct = item
+        item = schema.deserialize(data)
+        return item

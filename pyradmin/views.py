@@ -4,7 +4,7 @@ import json
 
 from pyramid.response import Response
 
-from pyradmin.schema import serialize
+from pyradmin.schema import serialize as serialize_schema
 
 __all__ = ("List", "Create", "Update", "Delete", "Show")
 
@@ -28,8 +28,11 @@ class View(object):
         response = Response(data, content_type="application/json")
         if self.need_schema:
             response.headers[self.SCHEMA_HDR] = json.dumps(
-                serialize(self.c.schema))
+                serialize_schema(self.schema))
         return response
+
+    def __getattr__(self, name):
+        return getattr(self.c, name)
 
 class CollectionView(View):
 
@@ -53,8 +56,8 @@ class List(CollectionView):
         return self.request.headers.get(self.LIMIT_HDR, 25)
 
     def process(self):
-        return [self.c.serialize(item)
-            for item in (self.collection.c.q
+        return [self.serialize(item)
+            for item in (self.q
                 .offset(self.offset)
                 .limit(self.limit)
                 .all())]
@@ -63,9 +66,9 @@ class Create(CollectionView):
 
     def process(self):
         data = json.loads(self.request.body)
-        schema = self.c.schema
-        item = self.c.create_item(schema, data)
-        return getattr(item, self.c.primary_key.name)
+        schema = self.schema
+        item = self.create_item(schema, data)
+        return self.primary_key_for(item)
 
 class ResourceView(View):
 
@@ -81,13 +84,15 @@ class Show(ResourceView):
         return self.resource.serialized_item
 
 class Update(ResourceView):
-    pass
+
+    def process(self):
+        data = json.loads(self.request.body)
+        schema = self.schema
+        self.update_item(self.resource.item, schema, data)
 
 class Delete(ResourceView):
 
     def process(self):
-        pk_name = self.c.primary_key.name
-        pk_val = getattr(self.resource.item, pk_name)
-        (self.c.q
-            .filter_by(**{pk_name: pk_val})
-            .delete())
+        pk_name = self.primary_key.name
+        pk_val = self.primary_key_for(self.resource.item)
+        self.q.filter_by(**{pk_name: pk_val}).delete()
