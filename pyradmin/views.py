@@ -60,7 +60,12 @@ class List(CollectionView):
                 .all())]
 
 class Create(CollectionView):
-    pass
+
+    def process(self):
+        data = json.loads(self.request.body)
+        schema = self.c.schema
+        item = self.c.create_item(schema, data)
+        return getattr(item, self.c.primary_key.name)
 
 class ResourceView(View):
 

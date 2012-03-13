@@ -8,6 +8,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker
 
 from pyradmin.resource import Config
+from pyradmin.schema import ObjectSchema
 from pyradmin import views
 
 from zope.sqlalchemy import ZopeTransactionExtension
@@ -30,7 +31,7 @@ class MyModelConfig(Config):
     session = DBSession
     cls = MyModel
 
-    class Schema(colander.MappingSchema):
+    class Schema(ObjectSchema):
 
         id = colander.SchemaNode(colander.Integer(), primary_key=True)
         name = colander.SchemaNode(colander.String())

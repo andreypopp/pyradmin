@@ -1,4 +1,6 @@
-""" Resource management"""
+""" Resource configuration"""
+
+from pyradmin.util import class_name
 
 __all__ = ("Manager", "Collection", "Resource")
 
@@ -40,7 +42,7 @@ class Config(object):
     @property
     def schema(self):
         schema = self.Schema()
-        schema.name = self.__class__.__name__.lower()
+        schema.name = class_name(cls=self.cls)
         return schema
 
     def serialize(self, item):
@@ -60,3 +62,7 @@ class Config(object):
     @property
     def collection(self):
         return self.Collection(self)
+
+    def create_item(self, schema, data):
+        schema.appstruct = self.cls()
+        return schema.deserialize(data)
