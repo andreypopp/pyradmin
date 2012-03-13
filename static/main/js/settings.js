@@ -4,6 +4,7 @@ var settings = {
 	paths: {
 		stat: '/static',
 		api: '/',
+		models: '/',
 		templates: '/static/main/templates'
 	}
 };

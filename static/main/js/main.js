@@ -3,11 +3,12 @@ $(function () {
 var settings = pyradmin.settings;
 var xhr = pyradmin.xhr;
 var Schema = pyradmin.schema.Schema;
-var getRows = pyradmin.data.getRows;
+var render = pyradmin.templates.render;
 
 var dataSlot = $('#data').first();
 
-var loadData = function (url) {
+var showModel = function (modelPath) {
+	var url = settings.paths.models + modelPath;
 	xhr.send(url, function (err, result) {
 		if (err)
 		{
@@ -17,15 +18,17 @@ var loadData = function (url) {
 		else
 		{
 			var schema = Schema.parse(result.meta.schema);
-			var rows = getRows(schema, result.data);
+			var rows = schema.getRows(result.data);
+			var fields = schema.getFields();
 
-			dataSlot.html(new EJS({url: settings.paths.templates+'/list.ejs'}).render({
+			render(dataSlot, '/table.ejs', {
+				fields: fields,
 				rows: rows
-			}));
+			});
 		}
 	});
 };
 
-loadData('/');
+showModel('');
 
 });
