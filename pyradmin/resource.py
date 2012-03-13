@@ -9,11 +9,10 @@ class Resource(object):
     def __init__(self, cfg, item):
         self.cfg = self.c = cfg
         self.item = item
-        self.q = self.c.q
 
     @property
     def serialized_item(self):
-        return self.manager.serialize(self.item)
+        return self.c.serialize(self.item)
 
 class Collection(object):
 
@@ -22,13 +21,13 @@ class Collection(object):
         self.q = self.c.q
 
     def __iter__(self):
-        return iter(self.q())
+        return iter(self.q)
 
     def __getitem__(self, id):
         item = self.c.q.get(id)
         if not item:
             raise KeyError(id)
-        return self.manager.Resource(self.cfg, item)
+        return self.c.Resource(self.cfg, item)
 
 class Config(object):
 
@@ -76,3 +75,6 @@ class Config(object):
         schema.appstruct = item
         item = schema.deserialize(data)
         return item
+
+    def delete_item(self, item):
+        self.session.delete(item)

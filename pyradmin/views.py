@@ -93,6 +93,4 @@ class Update(ResourceView):
 class Delete(ResourceView):
 
     def process(self):
-        pk_name = self.primary_key.name
-        pk_val = self.primary_key_for(self.resource.item)
-        self.q.filter_by(**{pk_name: pk_val}).delete()
+        self.delete_item(self.resource.item)
