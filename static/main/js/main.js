@@ -10,13 +10,13 @@ var Router = Backbone.Router.extend({
     console.log('route "list":', modelId);
     var view = new pyradmin.PaginatedListView({
     	el: $('#main'),
-    	modelId: model
+    	modelId: modelId
 		});
     view.render();
   },
 
-  show: function(model, id) {
-    console.log('route "show":', model, id);
+  show: function(modelId, id) {
+    console.log('route "show":', modelId, id);
   }
 
 });

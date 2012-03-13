@@ -11,15 +11,15 @@ var PaginatedListView = Backbone.View.extend({
   initialize: function(options) {
     this.list = new ListView({
     	collection: this.collection,
-    	modelName: this.options.modelId
+    	modelId: this.options.modelId
     });
     this.pagination = new PaginationControls();
   },
 
   render: function() {
     // TODO: move to template
-    var list = this.make("div", {"class": "list"});
-    var pagination = this.make("div", {"class": "pagination"});
+    var list = this.make('div', {'class': 'list'});
+    var pagination = this.make('div', {'class': 'pagination'});
 
     this.$el.append(list);
     this.$el.append(pagination);
@@ -35,40 +35,38 @@ var PaginatedListView = Backbone.View.extend({
 
 var ListView = Backbone.View.extend({
 
-	fetchItems: function (modelPath, cb) {
-		var url = settings.paths.models + modelPath;
+	fetchItems: function (cb) {
 		var range = Range.fromQuery();
-
+    xhr.load(
+  		settings.paths.models + '/' + this.options.modelId,
+			range, null, _.bind(cb, this));
 	},
 
   render: function() {
 		var range = Range.fromQuery();
-  	this.fetchItems(
-  		settings.paths.models + '/' + this.options.modelId,
-			range, null, 
-			_.bind(function(err, result) {
-				if (err)
-				{
-					console.log(err);
-					alert('ooops');
-				}
-				else
-				{
-					var model = Model.parse(result.meta.model);
-					render(this.$el, '/model.ejs', {
-						fields: model,
-						rows: result.data
-					});
-				}
-		}, this));
+  	this.fetchItems(function(err, result) {
+      if (err)
+      {
+        console.log(err);
+        alert('ooops');
+      }
+      else
+      {
+        var model = Model.parse(result.meta.model);
+        render(this.$el, '/model.ejs', {
+          model: model,
+          data: result.data
+        });
+      }
+		});
     return this;
   }
 });
 
 var PaginationControls = Backbone.View.extend({
   events: {
-    "click .previous":  "prev",
-    "click .next":      "next",
+    'click .previous':  'prev',
+    'click .next':      'next',
   },
 
   render: function() {
@@ -77,11 +75,11 @@ var PaginationControls = Backbone.View.extend({
   },
 
   prev: function() {
-    console.log("prev");
+    console.log('prev');
   },
 
   next: function() {
-    console.log("next");
+    console.log('next');
   }
 });
 
