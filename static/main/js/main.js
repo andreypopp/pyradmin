@@ -2,7 +2,7 @@ $(function () {
 
 var settings = pyradmin.settings;
 var xhr = pyradmin.xhr;
-var Schema = pyradmin.schema.Schema;
+var Model = pyradmin.model.Model;
 var render = pyradmin.templates.render;
 
 var dataSlot = $('#data').first();
@@ -17,10 +17,10 @@ var showModel = function (modelPath) {
 		}
 		else
 		{
-			var schema = Schema.parse(result.meta.schema);
+			var model = Model.parse(result.meta.model);
 
 			render(dataSlot, '/model.ejs', {
-				model: schema,
+				model: model,
 				data: result.data
 			});
 		}

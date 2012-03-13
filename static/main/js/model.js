@@ -4,16 +4,16 @@ var Field = function (name) {
 	this.name = name;
 };
 
-var Schema = function () {
+var Model = function () {
 	this.fields = {};
 	this.ord = {};
 };
 
-Schema.prototype.getOrd = function (fieldName) {
+Model.prototype.getOrd = function (fieldName) {
 	return this.ord[fieldName];
 };
 
-Schema.prototype.fromInfo = function (info) {
+Model.prototype.fromInfo = function (info) {
 	this.name = info.name;
 	var fields = info.fields;
 
@@ -28,7 +28,7 @@ Schema.prototype.fromInfo = function (info) {
 	}
 };
 
-Schema.prototype.getFields = function () {
+Model.prototype.getFields = function () {
 	var fields = [];
 	for (var i in this.fields)
 	{
@@ -39,7 +39,7 @@ Schema.prototype.getFields = function () {
 	return fields;
 };
 
-Schema.prototype.getRows = function (data) {
+Model.prototype.getRows = function (data) {
 	var rows = [];
 	for (var i in data)
 	{
@@ -55,17 +55,17 @@ Schema.prototype.getRows = function (data) {
 	return rows;
 };
 
-Schema.parse = function (info) {
-	var schema = new Schema();
-	schema.fromInfo(info);
-	return schema;
+Model.parse = function (info) {
+	var model = new Model();
+	model.fromInfo(info);
+	return model;
 };
 
 
 window.pyradmin = window.pyradmin || {};
-window.pyradmin.schema = {
+window.pyradmin.model = {
 	Field: Field,
-	Schema: Schema
+	Model: Model
 };
 
 })();

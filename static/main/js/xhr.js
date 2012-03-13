@@ -50,22 +50,22 @@ XHR.prototype.jqSuccess = function (data, textStatus, request) {
 	{
 		var result = {};
 
-		var schemaInfoStr = request.getResponseHeader('X-Pyradmin-Schema');
-		if (schemaInfoStr)
+		var modelInfoStr = request.getResponseHeader('X-Pyradmin-Schema');
+		if (modelInfoStr)
 		{
-			var schemaInfo;
+			var modelInfo;
 			try
 			{
-				schemaInfo = JSON.parse(schemaInfoStr);
+				modelInfo = JSON.parse(modelInfoStr);
 			}
 			catch (exc)
 			{
 			}
 
-			if (schemaInfo)
+			if (modelInfo)
 			{
 				result.meta = {
-					schema: schemaInfo
+					model: modelInfo
 				};
 			}
 		}
