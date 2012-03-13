@@ -5,7 +5,7 @@ bootstrap: develop
 	populate_pyradmin ./development.ini
 
 serve:
-	pserve ./development.ini
+	pserve --reload --monitor-restart ./development.ini
 
 shell:
-	pshell --reload --monitor-restart ./development.ini
+	pshell ./development.ini
