@@ -10,11 +10,23 @@ class View(object):
 
     SCHEMA_HDR = "X-Pyradmin-Schema"
 
-    schema = NotImplemented
-    session = NotImplemented
-    cls = NotImplemented
-
     _need_schema = False
+
+    def __init__(self, context, request):
+        self.context = context
+        self.request = request
+
+    @property
+    def schema(self):
+        return self.context.schema
+
+    @property
+    def session(self):
+        return self.context.session
+
+    @property
+    def cls(self):
+        return self.context.cls
 
     def process(self):
         raise NotImplementedError()
@@ -32,20 +44,8 @@ class View(object):
 class CollectionView(View):
 
     def __init__(self, collection, request):
+        super(CollectionView, self).__init__(collection, request)
         self.collection = collection
-        self.request = request
-
-    @property
-    def schema(self):
-        return self.collection.schema
-
-    @property
-    def session(self):
-        return self.collection.session
-
-    @property
-    def cls(self):
-        return self.collection.cls
 
 class List(CollectionView):
 
@@ -75,12 +75,8 @@ class Create(CollectionView):
 class ResourceView(View):
 
     def __init__(self, resource, request):
+        super(ResourceView, self).__init__(resource, request)
         self.resource = resource
-        self.request = request
-
-    @property
-    def collection(self):
-        return self.resource.collection
 
     @property
     def query(self):
@@ -89,18 +85,6 @@ class ResourceView(View):
     @property
     def item(self):
         return self.resource.item
-
-    @property
-    def schema(self):
-        return self.resource.schema
-
-    @property
-    def session(self):
-        return self.resource.session
-
-    @property
-    def cls(self):
-        return self.resource.cls
 
 class Show(ResourceView):
 
