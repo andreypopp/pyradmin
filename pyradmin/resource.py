@@ -31,14 +31,21 @@ class Collection(object):
 class Config(object):
 
     cls = NotImplemented
-    schema = NotImplemented
     session = NotImplemented
 
+    Schema = NotImplemented
     Collection = Collection
     Resource = Resource
 
+    @property
+    def schema(self):
+        schema = self.Schema()
+        schema.name = self.__class__.__name__.lower()
+        return schema
+
     def serialize(self, item):
-        return dict((n.name, getattr(item, n.name)) for n in self.schema.nodes)
+        return dict((n.name, getattr(item, n.name))
+                for n in self.schema.children)
 
     @property
     def q(self):

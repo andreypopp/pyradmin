@@ -4,6 +4,8 @@ import json
 
 from pyramid.response import Response
 
+from pyradmin.schema import serialize
+
 __all__ = ("List", "Create", "Update", "Delete", "Show")
 
 class View(object):
@@ -15,7 +17,7 @@ class View(object):
     def __init__(self, context, request):
         self.context = context
         self.request = request
-        self.cfg = self.c = context.c
+        self.cfg = self.c = context.cfg
 
     def process(self):
         raise NotImplementedError()
@@ -26,7 +28,7 @@ class View(object):
         response = Response(data, content_type="application/json")
         if self.need_schema:
             response.headers[self.SCHEMA_HDR] = json.dumps(
-                [{"name": n.name} for n in self.c.schema.nodes])
+                serialize(self.c.schema))
         return response
 
 class CollectionView(View):

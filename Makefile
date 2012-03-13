@@ -1,4 +1,4 @@
-test develop install register clean build:
+test develop install register build:
 	python setup.py $@
 
 bootstrap: develop
@@ -9,3 +9,7 @@ serve:
 
 shell:
 	pshell ./development.ini
+
+clean:
+	find . -name '*.pyc' -delete
+	python setup.py clean

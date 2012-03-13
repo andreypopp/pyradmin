@@ -30,7 +30,7 @@ class MyModelConfig(Config):
     session = DBSession
     cls = MyModel
 
-    class schema(colander.MappingSchema):
+    class Schema(colander.MappingSchema):
 
         id = colander.SchemaNode(colander.Integer(), primary_key=True)
         name = colander.SchemaNode(colander.String())
