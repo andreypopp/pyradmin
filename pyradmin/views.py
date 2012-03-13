@@ -38,7 +38,7 @@ class View(object):
             content_type="application/json")
         if self._need_schema:
             response.headers[self.SCHEMA_HDR] = json.dumps(
-                [n.name for n in self.schema.nodes])
+                [{"name": n.name} for n in self.schema.nodes])
         return response
 
 class CollectionView(View):
