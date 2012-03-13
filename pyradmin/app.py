@@ -25,14 +25,14 @@ class MyModel(Base):
         self.name = name
         self.value = value
 
-
 class MyModelCollection(Collection):
 
     session = DBSession
     cls = MyModel
+
     class schema(colander.MappingSchema):
 
-        id = colander.SchemaNode(colander.Integer())
+        id = colander.SchemaNode(colander.Integer(), primary_key=True)
         name = colander.SchemaNode(colander.String())
 
 def main(global_config, **settings):
@@ -45,11 +45,5 @@ def main(global_config, **settings):
         root_factory=lambda request: MyModelCollection())
     config.add_static_view('static', 'static', cache_max_age=3600)
     config.include("pyradmin")
-    config.add_view(views.List, context=MyModelCollection,
-            request_method="GET",
-            renderer="json")
-    config.add_view(views.Meta, context=MyModelCollection,
-            request_method="OPTIONS",
-            renderer="json")
-    config.scan()
+    config.add_pyradmin(MyModelCollection)
     return config.make_wsgi_app()
