@@ -7,8 +7,8 @@ from sqlalchemy import Column, Integer, Text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker
 
+from pyradmin.resource import Config
 from pyradmin import views
-from pyradmin.collection import Collection
 
 from zope.sqlalchemy import ZopeTransactionExtension
 
@@ -25,7 +25,7 @@ class MyModel(Base):
         self.name = name
         self.value = value
 
-class MyModelCollection(Collection):
+class MyModelConfig(Config):
 
     session = DBSession
     cls = MyModel
@@ -42,8 +42,8 @@ def main(global_config, **settings):
     DBSession.configure(bind=engine)
     config = Configurator(
         settings=settings,
-        root_factory=lambda request: MyModelCollection())
+        root_factory=lambda request: MyModelConfig().collection)
     config.add_static_view('static', 'static', cache_max_age=3600)
     config.include("pyradmin")
-    config.add_pyradmin(MyModelCollection)
+    config.add_pyradmin(MyModelConfig)
     return config.make_wsgi_app()

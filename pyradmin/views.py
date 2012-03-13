@@ -10,35 +10,23 @@ class View(object):
 
     SCHEMA_HDR = "X-Pyradmin-Schema"
 
-    _need_schema = False
+    need_schema = False
 
     def __init__(self, context, request):
         self.context = context
         self.request = request
-
-    @property
-    def schema(self):
-        return self.context.schema
-
-    @property
-    def session(self):
-        return self.context.session
-
-    @property
-    def cls(self):
-        return self.context.cls
+        self.cfg = self.c = context.c
 
     def process(self):
         raise NotImplementedError()
 
     def __call__(self):
         data = self.process()
-        response = Response(
-            json.dumps(data),
-            content_type="application/json")
-        if self._need_schema:
+        data = json.dumps(data) if not data is None else ""
+        response = Response(data, content_type="application/json")
+        if self.need_schema:
             response.headers[self.SCHEMA_HDR] = json.dumps(
-                [{"name": n.name} for n in self.schema.nodes])
+                [{"name": n.name} for n in self.c.schema.nodes])
         return response
 
 class CollectionView(View):
@@ -52,7 +40,7 @@ class List(CollectionView):
     OFFSET_HDR = "X-Pyradmin-Offset"
     LIMIT_HDR = "X-Pyradmin-Limit"
 
-    _need_schema = True
+    need_schema = True
 
     @property
     def offset(self):
@@ -63,8 +51,8 @@ class List(CollectionView):
         return self.request.headers.get(self.LIMIT_HDR, 25)
 
     def process(self):
-        return [self.collection.serialize(item)
-            for item in (self.collection.q
+        return [self.c.serialize(item)
+            for item in (self.collection.c.q
                 .offset(self.offset)
                 .limit(self.limit)
                 .all())]
@@ -78,17 +66,9 @@ class ResourceView(View):
         super(ResourceView, self).__init__(resource, request)
         self.resource = resource
 
-    @property
-    def query(self):
-        return self.resource.collection.q
-
-    @property
-    def item(self):
-        return self.resource.item
-
 class Show(ResourceView):
 
-    _need_schema = True
+    need_schema = True
 
     def process(self):
         return self.resource.serialized_item
@@ -99,8 +79,8 @@ class Update(ResourceView):
 class Delete(ResourceView):
 
     def process(self):
-        pk_name = self.collection.primary_key.name
-        pk_val = getattr(self.item, pk_name)
-        (self.query
+        pk_name = self.c.primary_key.name
+        pk_val = getattr(self.resource.item, pk_name)
+        (self.c.q
             .filter_by(**{pk_name: pk_val})
             .delete())
