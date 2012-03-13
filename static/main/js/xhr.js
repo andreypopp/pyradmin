@@ -22,25 +22,34 @@ var ResponsedError = function (status) {
 var BadRequest = function () {
 };
 
-var XHR = function (cb) {
-	this.cb = cb;
+var XHR = function () {
+	this.cb = null;
+	this.url = null;
+	this.data = undefined;
+	this.headers = {};
 };
 
-XHR.prototype.send = function (url, data) {
+XHR.prototype.addHeader = function (k, v) {
+	this.headers[k] = v;
+};
+
+XHR.prototype.send = function () {
 	var self = this;
 
 	var settings = {
-		url: url,
+		url: this.url,
+		headers: this.headers,
 		dataType: 'json',
 		success: function () { self.jqSuccess.apply(self, arguments); },
 		error: function () { self.jqError.apply(self, arguments); }
 	};
 
-	if (arguments.length > 1)
+	if (this.data !== undefined)
 	{
-		settings.data = data;
+		settings.data = this.data;
 		settings.contentType = 'application/json';
 	}
+
 
 	$.ajax(settings);
 };
@@ -98,30 +107,31 @@ XHR.prototype.jqError = function (request, textStatus, errorThrown) {
 	}
 };
 
-var send = function (url, data, cb) {
-	var hasData = true;
+var load = function (url, range, query, cb) {
+	var xhr = new XHR();
 
-	if (arguments.length < 3)
+	xhr.cb = cb;
+	xhr.url = url;
+
+	if (range)
 	{
-		cb = data;
-		hasData = false;
+		if (range.offset)
+		{
+			xhr.addHeader('X-Pyradmin-Offset', range.offset);
+		}
+
+		if (range.limit != null)
+		{
+			xhr.addHeader('X-Pyradmin-Limit', range.limit);
+		}
 	}
 
-	var xhr = new XHR(cb);
-
-	if (hasData)
-	{
-		xhr.send(url, data);
-	}
-	else
-	{
-		xhr.send(url);
-	}
+	xhr.send();
 };
 
 window.pyradmin = window.pyradmin || {};
 window.pyradmin.xhr = {
-	send: send,
+	load: load,
 	XHR: XHR,
 	XHRError: XHRError,
 	XHRInternalError: XHRInternalError,

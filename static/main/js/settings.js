@@ -1,6 +1,8 @@
 (function () {
 
 var settings = {
+	pageSize: 20,
+
 	paths: {
 		stat: '/static',
 		api: '/',
