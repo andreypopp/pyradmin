@@ -9,9 +9,7 @@ var Model = pyradmin.model.Model;
 var PaginatedListView = Backbone.View.extend({
 
   initialize: function(options) {
-    this.list = new ListView({
-    	modelId: this.options.modelId
-    });
+    this.list = new ListView({modelId: this.options.modelId});
     this.pagination = new PaginationControls();
   },
 
@@ -39,7 +37,7 @@ var ListView = Backbone.View.extend({
 	},
 
 	setRange: function(range) {
-			this.fetchItems(range, function(err, result) {
+		this.fetchItems(range, function(err, result) {
       if (err) {
         console.log(err);
         alert('ooops!');
