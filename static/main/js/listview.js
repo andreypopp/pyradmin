@@ -16,40 +16,37 @@ var PaginatedListView = Backbone.View.extend({
   },
 
   render: function() {
-    // TODO: move to template
-    var list = this.make('div', {'class': 'list'});
-    var pagination = this.make('div', {'class': 'pagination'});
+    render(this.$el, '/paginatedlist.ejs', {});
 
-    this.$el.append(list);
-    this.$el.append(pagination);
-
-    this.list.setElement(list);
+    this.list.setElement(this.$('.list'));
     this.list.render();
-
-    this.pagination.setElement(pagination);
+    this.pagination.setElement(this.$('.pagination'));
     this.pagination.render();
+
+    this.pagination.on("change", _.bind(this.navigate, this));
+
     return this;
+  },
+
+  navigate: function(range) {
+    this.list.setRange(range);
   }
 });
 
 var ListView = Backbone.View.extend({
 
-	fetchItems: function (cb) {
-		var range = Range.fromQuery();
-    xhr.load(
-  		settings.paths.models + '/' + this.options.modelId,
+	fetchItems: function (range, cb) {
+		xhr.load(
+			settings.paths.models + '/' + this.options.modelId,
 			range, null, _.bind(cb, this));
 	},
 
-  render: function() {
-  	this.fetchItems(function(err, result) {
-      if (err)
-      {
+	setRange: function(range) {
+			this.fetchItems(range, function(err, result) {
+      if (err) {
         console.log(err);
-        alert('ooops');
-      }
-      else
-      {
+        alert('ooops!');
+      } else {
         var model = Model.parse(result.meta.model);
         render(this.$el, '/model.ejs', {
           model: model,
@@ -57,6 +54,10 @@ var ListView = Backbone.View.extend({
         });
       }
 		});
+  },
+
+  render: function() {
+		this.setRange(Range.fromQuery());
     return this;
   }
 });
@@ -67,17 +68,25 @@ var PaginationControls = Backbone.View.extend({
     'click .next':      'next'
   },
 
+  initialize: function() {
+    this.range = Range.fromQuery();
+  },
+
   render: function() {
     render(this.$el, '/pagination.ejs', {});
     return this;
   },
 
   prev: function() {
-    console.log('prev');
+    this.range = this.range.prev();
+    pyradmin.router.navigateRange(this.range);
+    this.trigger("change", this.range);
   },
 
   next: function() {
-    console.log('next');
+    this.range = this.range.next();
+    pyradmin.router.navigateRange(this.range);
+    this.trigger("change", this.range);
   }
 });
 
