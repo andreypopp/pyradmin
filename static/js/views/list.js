@@ -1,11 +1,11 @@
 define(function(require, exports, module) {
 
-	var Range = require('range').Range;
-	var main = require('main');
-	var render = require('templates').render;
 	var settings = require('settings');
+	var range = require('range');
+	var templates = require('templates');
 	var xhr = require('xhr');
-	var Model = require('model').Model;
+	var model = require('model');
+	var main = require('main');
 
 	var PaginatedListView = Backbone.View.extend({
 
@@ -43,9 +43,9 @@ define(function(require, exports, module) {
 					console.log(err);
 					alert('ooops!');
 				} else {
-					var model = Model.parse(result.meta.model);
-					render(this.$el, '/list.ejs', {
-						model: model,
+					var m = model.Model.parse(result.meta.model);
+					templates.render(this.$el, '/list.ejs', {
+						model: m,
 						data: result.data
 					});
 				}
@@ -53,7 +53,7 @@ define(function(require, exports, module) {
 		},
 
 		render: function() {
-			this.setRange(Range.fromQuery());
+			this.setRange(range.Range.fromQuery());
 			return this;
 		}
 	});
@@ -65,11 +65,11 @@ define(function(require, exports, module) {
 		},
 
 		initialize: function() {
-			this.range = Range.fromQuery();
+			this.range = range.Range.fromQuery();
 		},
 
 		render: function() {
-			render(this.$el, '/pagination.ejs', {});
+			templates.render(this.$el, '/pagination.ejs', {});
 			return this;
 		},
 

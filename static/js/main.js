@@ -1,8 +1,8 @@
 define(function(require, exports, module) {
 
 	var query = require('query');
-	var PaginatedListView = require('listview').PaginatedListView;
-	var ItemView = require('itemview').ItemView;
+	var PaginatedListView = require('views/list').PaginatedListView;
+	var ItemView = require('views/item').ItemView;
 
 	var Router = Backbone.Router.extend({
 
