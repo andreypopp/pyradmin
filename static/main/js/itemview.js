@@ -7,6 +7,10 @@ var xhr = pyradmin.xhr;
 var Model = pyradmin.model.Model;
 
 var ItemView = Backbone.View.extend({
+	events: {
+		'click .saveBtn': 'save',
+		'click .cancelBtn': 'cancel'
+	},
 
 	initialize: function(options) {
 		this.item = new ItemFieldsView({
@@ -19,12 +23,34 @@ var ItemView = Backbone.View.extend({
 		// TODO: move to template
 		var item = this.make('div', {'class': 'item'});
 
-		this.$el.append(item);
-
 		this.item.setElement(item);
-		this.item.render();
+
+		var self = this;
+		this.item.render(function () {
+			self.$el.html('');
+			self.$el.append(item);
+		});
 
 		return this;
+	},
+
+	save: function () {
+		var self = this;
+		var url = settings.paths.models + '/' + this.options.modelId + '/' + this.options.itemId;
+		var data = {};//form.collectData(this.item.model, this.item.form);
+		xhr.send('PUT', url, data, function (err, result) {
+			if (err != null)
+			{
+				alert('error');
+				self.render();
+			}
+		});
+		return false;
+	},
+
+	cancel: function () {
+		this.render();
+		return false;
 	}
 });
 
@@ -36,7 +62,7 @@ var ItemFieldsView = Backbone.View.extend({
 				null, null, _.bind(cb, this));
 	},
 
-	render: function() {
+	render: function(cb) {
 		this.fetchItem(function(err, result) {
 			if (err)
 			{
@@ -45,11 +71,16 @@ var ItemFieldsView = Backbone.View.extend({
 			}
 			else
 			{
-				var model = Model.parse(result.meta.model);
+				this.model = Model.parse(result.meta.model);
 				render(this.$el, '/item.ejs', {
-					model: model,
+					model: this.model,
 					data: result.data
 				});
+			}
+
+			if (cb != null)
+			{
+				cb();
 			}
 		});
 		return this;
