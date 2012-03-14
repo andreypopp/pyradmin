@@ -16,15 +16,12 @@ var PaginatedListView = Backbone.View.extend({
   },
 
   render: function() {
-    render(this.$el, '/paginatedlist.ejs', {});
-
-    this.list.setElement(this.$('.list'));
     this.list.render();
-    this.pagination.setElement(this.$('.pagination'));
     this.pagination.render();
-
     this.pagination.on("change", _.bind(this.navigate, this));
 
+    this.$el.append(this.list.$el);
+    this.$el.append(this.pagination.$el);
     return this;
   },
 
@@ -48,7 +45,7 @@ var ListView = Backbone.View.extend({
         alert('ooops!');
       } else {
         var model = Model.parse(result.meta.model);
-        render(this.$el, '/model.ejs', {
+        render(this.$el, '/list.ejs', {
           model: model,
           data: result.data
         });

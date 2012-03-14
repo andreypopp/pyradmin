@@ -8,7 +8,7 @@ var settings = {
 		stat: '/static',
 		api: '/',
 		models: '/api',
-		templates: '/static/main/templates'
+		templates: '/static/templates'
 	}
 };
 
