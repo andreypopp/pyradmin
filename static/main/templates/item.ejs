@@ -14,11 +14,12 @@ var fields = model.getFields();
 	<%
 		var field = fields[i];
 		var fieldName = field.name;
+		var formFieldName = 'field_' + escape(field.name);
 	%>
 	    <div class="control-group">
-	      <label class="control-label" for="input01"><%= escape(fieldName) %></label>
+	      <label class="control-label" for="<%= formFieldName %>"><%= escape(fieldName) %></label>
 	      <div class="controls">
-	        <input type="text" class="input-xlarge" id="<%= escape(field.name) %>" value="<%= escape(data[fieldName]) %>">
+	        <input type="text" class="input-xlarge" name="<%= formFieldName %>" value="<%= escape(data[fieldName]) %>">
 	        <p class="help-block" style="display: none;">Supporting help text</p>
 	      </div>
 	    </div>

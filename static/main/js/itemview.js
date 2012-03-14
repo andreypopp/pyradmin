@@ -5,6 +5,7 @@ var settings = pyradmin.settings;
 var Range = pyradmin.Range;
 var xhr = pyradmin.xhr;
 var Model = pyradmin.model.Model;
+var form = pyradmin.form;
 
 var ItemView = Backbone.View.extend({
 	events: {
@@ -37,7 +38,7 @@ var ItemView = Backbone.View.extend({
 	save: function () {
 		var self = this;
 		var url = settings.paths.models + '/' + this.options.modelId + '/' + this.options.itemId;
-		var data = {};//form.collectData(this.item.model, this.item.form);
+		var data = form.collectData(this.item.model, this.item.form);
 		xhr.send('PUT', url, data, function (err, result) {
 			if (err != null)
 			{
@@ -76,6 +77,7 @@ var ItemFieldsView = Backbone.View.extend({
 					model: this.model,
 					data: result.data
 				});
+				this.form = $(this.$el, 'form');
 			}
 
 			if (cb != null)
