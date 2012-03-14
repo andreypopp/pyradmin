@@ -3,6 +3,7 @@
 import json
 import pkg_resources
 
+from pyramid import httpexceptions
 from pyramid.response import Response
 
 from pyradmin.schema import serialize as serialize_schema
@@ -70,7 +71,7 @@ class List(CollectionView):
 class Create(CollectionView):
 
     def process(self):
-        data = json.loads(self.request.body)
+        data = decode_data(self.request)
         schema = self.schema
         item = self.create_item(schema, data)
         return self.primary_key_for(item)
@@ -91,7 +92,7 @@ class Show(ResourceView):
 class Update(ResourceView):
 
     def process(self):
-        data = json.loads(self.request.body)
+        data = decode_data(self.request)
         schema = self.schema
         self.update_item(self.resource.item, schema, data)
 
@@ -99,3 +100,9 @@ class Delete(ResourceView):
 
     def process(self):
         self.delete_item(self.resource.item)
+
+def decode_data(request):
+    try:
+        return json.loads(request.body)
+    except json.JSONDecodeError:
+        raise httpexceptions.HTTPBadRequest("can't decode JSON data")
