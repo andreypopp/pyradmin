@@ -3,7 +3,6 @@
 var query = pyradmin.query;
 var settings = pyradmin.settings;
 
-
 var Range = function (offset, limit, pageInfo) {
 	if (offset == null)
 	{
@@ -14,6 +13,18 @@ var Range = function (offset, limit, pageInfo) {
 	this.limit = limit;
 	this.pageInfo = pageInfo;
 };
+
+Range.prototype.next = function() {
+  return Range.fromPage(this.pageInfo.page + 1, this.pageInfo.pageSize);
+}
+
+Range.prototype.prev = function() {
+  if (this.pageInfo.page == 1) {
+    return this;
+  } else {
+    return Range.fromPage(this.pageInfo.page - 1, this.pageInfo.pageSize);
+  }
+}
 
 Range.fromPage = function (page, pageSize) {
 	if (page == null)

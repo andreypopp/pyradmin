@@ -27,11 +27,20 @@ var getQuery = function () {
 	return parseQuery(window.location.search);
 };
 
+var serializeQuery = function(query) {
+  return $.param(query);
+};
+
+var setQuery = function(query) {
+  window.location.search = serializeQuery(query);
+};
 
 window.pyradmin = window.pyradmin || {};
 window.pyradmin.query = {
 	parseQuery: parseQuery,
-	getQuery: getQuery
+	getQuery: getQuery,
+	serializeQuery: serializeQuery,
+	setQuery: setQuery
 };
 
 })();
