@@ -10,7 +10,6 @@ var PaginatedListView = Backbone.View.extend({
 
   initialize: function(options) {
     this.list = new ListView({
-    	collection: this.collection,
     	modelId: this.options.modelId
     });
     this.pagination = new PaginationControls();
@@ -43,7 +42,6 @@ var ListView = Backbone.View.extend({
 	},
 
   render: function() {
-		var range = Range.fromQuery();
   	this.fetchItems(function(err, result) {
       if (err)
       {
@@ -66,7 +64,7 @@ var ListView = Backbone.View.extend({
 var PaginationControls = Backbone.View.extend({
   events: {
     'click .previous':  'prev',
-    'click .next':      'next',
+    'click .next':      'next'
   },
 
   render: function() {

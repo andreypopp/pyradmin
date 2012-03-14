@@ -39,6 +39,18 @@ Model.prototype.getFields = function () {
 	return fields;
 };
 
+Model.prototype.getKey = function (data) {
+	var result = null;
+
+	// TODO valid implementation
+	if ('id' in data)
+	{
+		result = data.id;
+	}
+
+	return result;
+};
+
 Model.prototype.getRows = function (data) {
 	var rows = [];
 	for (var i in data)

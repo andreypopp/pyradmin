@@ -49,7 +49,7 @@ def main(global_config, **settings):
     config.set_pyradmin_root("/api")
     config.add_pyradmin(MyModelConfig)
 
-    config.add_static_view('static', 'static', cache_max_age=3600)
+    config.add_static_view('static', 'static', cache_max_age=0)
     config.add_route("main", pattern="/*subpath", view="pyradmin.views:main")
 
     return config.make_wsgi_app()

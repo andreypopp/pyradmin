@@ -1,0 +1,29 @@
+<div style="padding: 40px;">
+
+<h1><%= escape(model.name) %></h1>
+
+<br />
+
+<%
+var fields = model.getFields();
+%>
+<form class="form-horizontal">
+  <fieldset>
+    <legend>Item <%= escape(model.getKey(data)) %></legend>
+	<% for (var i in fields) { %>
+	<%
+		var field = fields[i];
+		var fieldName = field.name;
+	%>
+	    <div class="control-group">
+	      <label class="control-label" for="input01"><%= escape(fieldName) %></label>
+	      <div class="controls">
+	        <input type="text" class="input-xlarge" id="<%= escape(field.name) %>" value="<%= escape(data[fieldName]) %>">
+	        <p class="help-block" style="display: none;">Supporting help text</p>
+	      </div>
+	    </div>
+	<% } %>
+  </fieldset>
+</form>
+
+</div>
