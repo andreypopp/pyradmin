@@ -15,29 +15,22 @@ def serialize(schema):
 
 class Object(colander.SchemaType):
 
-    def __init__(self, appstruct=None,  appstruct_cls=None):
-        self.appstruct = appstruct
-        self.appstruct_cls = appstruct_cls
-
-    def get_appstruct(self):
-        return self.appstruct or self.appstruct_cls()
-
     def serialize(self, node, appstruct):
 
         if appstruct is colander.null:
-            appstruct = self.appstruct
+            appstruct = node.appstruct
 
         error = None
         result = {}
 
-        for num, subnode in enumerate(self.nodes):
+        for num, subnode in enumerate(node.children):
             name = subnode.name
             subval = getattr(appstruct, name, colander.null)
             try:
                 result[name] = subnode.serialize(subval)
             except colander.Invalid as e:
                 if error is None:
-                    error = Invalid(node)
+                    error = colander.Invalid(node)
                 error.add(e, num)
 
         if error is not None:
@@ -50,16 +43,16 @@ class Object(colander.SchemaType):
             return colander.null
 
         error = None
-        result = self.get_appstruct()
+        result = node.appstruct
 
-        for num, subnode in enumerate(self.nodes):
+        for num, subnode in enumerate(node.children):
             name = subnode.name
             subval = cstruct.pop(name, colander.null)
             try:
                 setattr(result, name, subnode.deserialize(subval))
             except colander.Invalid as e:
                 if error is None:
-                    error = Invalid(node)
+                    error = colander.Invalid(node)
                 error.add(e, num)
 
         if error is not None:

@@ -3,6 +3,7 @@
 import json
 import pkg_resources
 
+from colander import Invalid
 from pyramid import httpexceptions
 from pyramid.response import Response
 
@@ -73,7 +74,10 @@ class Create(CollectionView):
     def process(self):
         data = decode_data(self.request)
         schema = self.schema
-        item = self.create_item(schema, data)
+        try:
+            item = self.create_item(schema, data)
+        except Invalid as e:
+            raise httpexceptions.HTTPBadRequest(e)
         return self.primary_key_for(item)
 
 class ResourceView(View):
@@ -94,7 +98,10 @@ class Update(ResourceView):
     def process(self):
         data = decode_data(self.request)
         schema = self.schema
-        self.update_item(self.resource.item, schema, data)
+        try:
+            self.update_item(self.resource.item, schema, data)
+        except Invalid as e:
+            raise httpexceptions.HTTPBadRequest(e)
 
 class Delete(ResourceView):
 
