@@ -5,7 +5,7 @@ var collectData = function (model, form) {
 
 	for (var k in model.fields)
 	{
-		var el = $(form, '[name="field_'+k+'"]');
+		var el = form.find('[name="field_'+k+'"]');
 		result[k] = el.val();
 	}
 

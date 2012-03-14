@@ -77,7 +77,7 @@ var ItemFieldsView = Backbone.View.extend({
 					model: this.model,
 					data: result.data
 				});
-				this.form = $(this.$el, 'form');
+				this.form = this.$el.find('form');
 			}
 
 			if (cb != null)
