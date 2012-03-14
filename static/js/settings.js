@@ -1,6 +1,4 @@
-(function () {
-
-var settings = {
+define({
 	pageSize: 20,
 
 	paths: {
@@ -10,9 +8,4 @@ var settings = {
 		models: '/api',
 		templates: '/static/templates'
 	}
-};
-
-window.pyradmin = window.pyradmin || {};
-window.pyradmin.settings = settings;
-
-})();
+});

@@ -10,16 +10,12 @@
 	<script type="text/javascript" src="/static/contrib/backbone.js"></script>
 	<script type="text/javascript" src="/static/contrib/bootstrap/js/bootstrap.min.js"></script>
 
-	<script type="text/javascript" src="/static/js/settings.js"></script>
-	<script type="text/javascript" src="/static/js/query.js"></script>
-	<script type="text/javascript" src="/static/js/range.js"></script>
-	<script type="text/javascript" src="/static/js/xhr.js"></script>
-	<script type="text/javascript" src="/static/js/model.js"></script>
-	<script type="text/javascript" src="/static/js/form.js"></script>
-	<script type="text/javascript" src="/static/js/templates.js"></script>
-	<script type="text/javascript" src="/static/js/listview.js"></script>
-	<script type="text/javascript" src="/static/js/itemview.js"></script>
-  <script type="text/javascript" src="/static/js/main.js"></script>
+  <script type="text/javascript">
+    var require = {
+      baseUrl: "/static/js"
+    };
+  </script>
+  <script data-main="main" type="text/javascript" src="/static/contrib/require.js"></script>
 </head>
 <body>
 	<div id="main">
